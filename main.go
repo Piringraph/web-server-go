@@ -6,12 +6,23 @@ import (
 	"net/http"
 )
 
-func helloHandler(w http.ResponseWeitter, r *http.Requqest) {
+func formHandler(w http.ResponseWriter, r *http.Request){
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "ParseForm() err: %v", err)
+		return
+	}
+}
+
+func helloHandler(w http.ResponseWritter, r *http.Requqest) {
 if r.URL.Path != "/hello" {
 	http.Error(w, "404 not found", http.StatusNotFound)
 	return
 }
-
+if r.Method != "GET" {
+	http.Error(w, "method is not supported", http.StatusNotFound)
+	return
+}
+fmt.Printf(w, "hello!")
 func main() {
 	fileserver := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
